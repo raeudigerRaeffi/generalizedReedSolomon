@@ -57,3 +57,4 @@ numpy == 1.19.5
 ## TODO
 1. Add case for r % p != 0 <br/>
 2. Add parallelization
+3. Add functionality to directly input blocks into encode and output blocks for decode
