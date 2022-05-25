@@ -51,9 +51,9 @@ print("equal",org_info == dec_test_normal)
 #equal True
 ```
 ## Dependencies
-galois == 0.0.27 /t
+galois == 0.0.27 <br/>
 numpy == 1.19.5
 
 ## TODO
-1. Add case for r % p != 0
+1. Add case for r % p != 0 <br/>
 2. Add parallelization
