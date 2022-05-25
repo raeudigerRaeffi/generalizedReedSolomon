@@ -5,10 +5,10 @@ Encoding and Decoding Algorithms" by Amin Shokrollahi. A version of the paper ca
 This special code can be sped up by a factor of p, since the code can be parallelized over p components. Additionally it allows to construct codes of arbitrary length as long as n%p == 0 is fulfilled. Whereas the standard Reed Solomon code imposes n= q^m -1.
 
 ## Documentation
-n = k + r
-k = message symbols sent
-r = number of parity symbols
-p = speed up factor
+n = k + r <br/>
+k = message symbols sent <br/>
+r = number of parity symbols <br/>
+p = speed up factor <br/>
 
 Currently the code can also handle codes where n %p != 0 however only if r is still divisble by p.
 ```
