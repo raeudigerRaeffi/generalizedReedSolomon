@@ -5,6 +5,12 @@ Encoding and Decoding Algorithms" by Amin Shokrollahi. A version of the paper ca
 This special code can be sped up by a factor of p, since the code can be parallelized over p components, as well as allows to construct codes of arbitrary length as long as n%p == 0 is fulfilled. Whereas the standard Reed Solomon code imposes n= q^m -1.
 
 ## Documentation
+n = k + r
+k = message symbols sent
+r = number of parity symbols
+p = speed up factor
+
+Currently the code can also handle codes where n %p != 0 however only if r is still divisble by p.
 ```
 class Generalized_Reed_Solomon(
 field_size:int, #q characterisitc of the field
@@ -45,3 +51,9 @@ print("equal",org_info == dec_test_normal)
 #equal True
 ```
 ## Dependencies
+galois == 0.0.27
+numpy == 1.19.5
+
+## TODO
+1. Add case for r % p != 0
+2. Add parallelization
