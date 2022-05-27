@@ -34,13 +34,16 @@ test_normal_rs = generalizedReedSolomon.Generalized_Reed_Solomon(field_size=31,
                                                                  payload_length=15,
                                                                  symbol_size=1,
                                                                  p_factor=3)
+# encode message
 normal_msg = test_normal_rs.encode(org_info)
+#corrupt encode message
 normal_msg[6] = 10
 normal_msg[9] = 12
 normal_msg[10] = 0
 normal_msg[16] = 4
 normal_msg[23] = 10
 
+#fix encoded message
 dec_test_normal = test_normal_rs.decode(normal_msg)
 print("dec",dec_test_normal)
 print("org",org_info)
