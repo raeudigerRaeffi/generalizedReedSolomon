@@ -143,7 +143,9 @@ class Generalized_Reed_Solomon(basereedsolomon.Base_Reed_Solomon):
     def decode_classic(self, recieved_msg):
        
         syndromes = self.calc_syndrome(recieved_msg)
-
+        #if all syndromes are 0 no error was detected
+        if np.all(syndromes == self.galois_field(0)):
+            return recieved_msg
         self.helper.debug_print("syndromes",syndromes)
 
         galois_lfsr = gl.berlekamp_massey(self.galois_field(syndromes),"galois")
