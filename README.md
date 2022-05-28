@@ -18,7 +18,7 @@ message_length:int, # n
 payload_length:int, # k
 symbol_size:int, #m exponent of field. Order of field is q^m
 p_factor:int, #p speedup factor
-irr_poly=None, # optional in case that the galois libary has not a precomputed irreducible polynominal
+irr_poly=None:array, # optional in case that the galois libary has not a precomputed irreducible polynominal
 debug=False # can be set to true in order to have the steps printed to the console
 )
 ```
