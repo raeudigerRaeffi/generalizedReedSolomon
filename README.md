@@ -54,7 +54,7 @@ print("equal",org_info == dec_test_normal)
 #equal True
 ```
 ## Dependencies
-galois == 0.0.27 <br/>
+galois == 0.0.28 <br/>
 numpy == 1.19.5
 
 ## TODO
