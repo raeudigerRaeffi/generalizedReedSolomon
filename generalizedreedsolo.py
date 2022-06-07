@@ -7,7 +7,7 @@ from . import basereedsolomon
 
 class Generalized_Reed_Solomon(basereedsolomon.Base_Reed_Solomon):
 
-    def __init__(self, field_size:int, message_length:int, payload_length:int,symbol_size:int,p_factor:int,irr_poly=None,multi_processing = True,debug=True) -> None:
+    def __init__(self, field_size:int, message_length:int, payload_length:int,symbol_size:int,p_factor:int,irr_poly=None,multi_processing = False,debug=True) -> None:
         super().__init__(field_size,message_length,payload_length,symbol_size,multi_processing,irr_poly,debug,p_factor)    
         self.p = p_factor
         self.primitive = self.galois_field.primitive_element #gl.primitive_root(1)
