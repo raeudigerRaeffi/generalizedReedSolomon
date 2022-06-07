@@ -7,8 +7,8 @@ from . import basereedsolomon
 
 class Generalized_Reed_Solomon(basereedsolomon.Base_Reed_Solomon):
 
-    def __init__(self, field_size:int, message_length:int, payload_length:int,symbol_size:int,p_factor:int,irr_poly=None,debug=False) -> None:
-        super().__init__(field_size,message_length,payload_length,symbol_size,irr_poly,debug,p_factor)    
+    def __init__(self, field_size:int, message_length:int, payload_length:int,symbol_size:int,p_factor:int,irr_poly=None,multi_processing = True,debug=True) -> None:
+        super().__init__(field_size,message_length,payload_length,symbol_size,multi_processing,irr_poly,debug,p_factor)    
         self.p = p_factor
         self.primitive = self.galois_field.primitive_element #gl.primitive_root(1)
             
@@ -41,7 +41,6 @@ class Generalized_Reed_Solomon(basereedsolomon.Base_Reed_Solomon):
         if len(message) != self.payload_length:
             raise ValueError("Length not as specified")
         self.helper.debug_print("encode input message:",message,len(message))
-
         if self.c != 0 :
             # add conceptual zeros
             message = ([0]*self.num_of_padded_zeros) + message 
@@ -84,12 +83,12 @@ class Generalized_Reed_Solomon(basereedsolomon.Base_Reed_Solomon):
         self.helper.debug_print("message matrix after",message_matrix)
         f_values = []
 
-        fft = self.helper.fft_on_matrix(message_matrix)
+        fft = self.helper.fft_on_matrix_multi(message_matrix) if self.multi else self.helper.fft_on_matrix(message_matrix)
         self.helper.debug_print("fft",self.galois_field(fft))
         for f_index in range(0,self.p):
             f_i = gl.Poly(fft[f_index],field=self.galois_field)
             self.helper.debug_print("fi",f_i,fft[f_index],f_i% self.generator_set[f_index] )
-            f_values.append((f_i % self.generator_set[f_index]).coeffs)
+            f_values.append((f_i % self.generator_set[f_index]).coeffs.tolist())
 
         
         
@@ -119,8 +118,7 @@ class Generalized_Reed_Solomon(basereedsolomon.Base_Reed_Solomon):
         self.helper.debug_print("fvalue",f_values)
         parity_values =[]
         
-        
-        ifft = self.helper.ifft_on_matrix(f_values)
+        ifft = self.helper.ifft_on_matrix(f_values) if self.multi else self.helper.ifft_on_matrix(f_values)
         self.helper.debug_print("ifft",ifft)
         for h_index in range(0,self.p):
             h_i = ifft[h_index]
@@ -143,7 +141,7 @@ class Generalized_Reed_Solomon(basereedsolomon.Base_Reed_Solomon):
     def decode_classic(self, recieved_msg):
        
         syndromes = self.calc_syndrome(recieved_msg)
-        #if all syndromes are 0 no error was detected
+
         if np.all(syndromes == self.galois_field(0)):
             return recieved_msg
         self.helper.debug_print("syndromes",syndromes)
@@ -213,7 +211,7 @@ class Generalized_Reed_Solomon(basereedsolomon.Base_Reed_Solomon):
         
         fourier_transformed_syndromes = []
         self.helper.debug_print("divided codeword",divided_codeword)
-        fft = self.helper.fft_on_matrix(self.galois_field(divided_codeword))
+        fft = self.helper.fft_on_matrix_multi(divided_codeword) if self.multi else self.helper.fft_on_matrix(divided_codeword)
         self.helper.debug_print("fft_decode",self.galois_field( fft))
         for F_i in range(0,self.p):
             fourier_transformed_syndromes.append(fft[F_i])
