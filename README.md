@@ -97,10 +97,12 @@ test_normal_rs =reedSolomon.Generalized_Reed_Solomon(field_size=47,
                                                                  symbol_size=2,
                                                                  p_factor=2,
                                                                 debug=True)
+#convert to galois elements
 symbols = test_normal_rs.convert_to_symbol_array(info_symbols)
 print("symbols",symbols)
 symbols_encoded = test_normal_rs.encode(symbols)
 symbols_encoded[0] =1
+#convert Galois Elements back to coefficent representation
 symbols_decoded = test_normal_rs.decode(symbols_encoded)
 conv_back = test_normal_rs.symbol_array_to_array(symbols_decoded)
     
