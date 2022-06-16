@@ -5,7 +5,10 @@ from . import helper
 class Base_Reed_Solomon():
     def __init__(self, field_size:int, message_length:int, payload_length:int,symbol_size:int,multi_processing,irr_poly=None,debug=True,p=1,):
         self.field_size = field_size
-        self.pool = Pool(p)
+        if multi_processing:
+            self.pool = Pool(p)
+        else:
+            self.pool = None
         if irr_poly ==None:
             try:
                 self.galois_field = gl.GF(field_size**symbol_size)#TODO remove power asap
