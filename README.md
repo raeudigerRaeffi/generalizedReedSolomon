@@ -11,6 +11,7 @@ r = number of parity symbols <br/>
 p = speed up factor <br/>
 
 Currently the code can also handle codes where n %p != 0 however only if r is still divisble by p.
+### Class Generalized_Reed_Solomon
 ```
 class Generalized_Reed_Solomon(
 field_size:int, #q characterisitc of the field
@@ -19,8 +20,32 @@ payload_length:int, # k
 symbol_size:int, #m exponent of field. Order of field is q^m
 p_factor:int, #p speedup factor
 irr_poly=None:array, # optional in case that the galois libary has not a precomputed irreducible polynominal
+multi_processing = False, #optional when True certain parts of the code will be parallelized this is however currently only efficent when operating with long messages
 debug=False # can be set to true in order to have the steps printed to the console
 )
+```
+### Generalized_Reed_Solomon.encode()
+```
+Generalized_Reed_Solomon.encode(self,array)
+# Takes as an argument a list and appends parity symbols to it
+```
+### Generalized_Reed_Solomon.decode()
+```
+Generalized_Reed_Solomon.decode(self, recieved_msg)
+# Takes as an argument a list of a encoded message. Detects and corrects errors and then returns the k info symbols
+```
+### Generalized_Reed_Solomon.convert_to_symbol_array()
+```
+Generalized_Reed_Solomon.convert_to_symbol_array(self,array)
+# Takes as an argument a list values and converts them to galois elements. If the degree of field > 1, the list will be´a list of list
+# where each list represents the coefficents of a Galois element of the corresponding Field
+```
+
+### Generalized_Reed_Solomon.symbol_array_to_array()
+```
+Generalized_Reed_Solomon.symbol_array_to_array(self,array)
+# Takes a list of ints as an argument. Performs the reverse of convert_to_symbol_array(). Transforms each Galois field element in the list
+# into its coefficent representation.
 ```
 ## Usage
 ```
@@ -53,11 +78,44 @@ print("equal",org_info == dec_test_normal)
 #org [30, 20, 20, 9, 25, 1, 7, 2, 0, 18, 17, 22, 11, 0, 0]
 #equal True
 ```
+```
+ info_symbols = [
+        [20,5],
+        [35,10],
+        [5,10],
+        [35,20],
+        [35,10],
+        [3,10],
+        [35,10],
+        [35,2],
+        [5,10],
+        [35,10]
+    ]
+test_normal_rs =reedSolomon.Generalized_Reed_Solomon(field_size=47,
+                                                                 message_length=14,
+                                                                 payload_length=10,
+                                                                 symbol_size=2,
+                                                                 p_factor=2,
+                                                                debug=True)
+#convert to galois elements
+symbols = test_normal_rs.convert_to_symbol_array(info_symbols)
+print("symbols",symbols)
+symbols_encoded = test_normal_rs.encode(symbols)
+symbols_encoded[0] =1
+#convert Galois Elements back to coefficent representation
+symbols_decoded = test_normal_rs.decode(symbols_encoded)
+conv_back = test_normal_rs.symbol_array_to_array(symbols_decoded)
+    
+print(conv_back)
+print(info_symbols == conv_back)
+#symbols [945, 1655, 245, 1665, 1655, 151, 1655, 1647, 245, 1655]
+#[[20, 5], [35, 10], [5, 10], [35, 20], [35, 10], [3, 10], [35, 10], [35, 2], [5, 10], [35, 10]]
+#True
+```
 ## Dependencies
 galois == 0.0.28 <br/>
 numpy == 1.19.5
 
 ## TODO
 1. Add case for r % p != 0 <br/>
-2. Add parallelization
-3. Add functionality to directly input blocks into encode and output blocks for decode
+2. Add parallelization(done for fft)
